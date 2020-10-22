@@ -230,6 +230,8 @@ join (select
 	join Production.ProductCategory as ppc on ppc.ProductCategoryID = pps.ProductSubcategoryID
 ) as ppp on ppp.ProductID = ssop.ProductID
 
+-- wyk³ad 89
+
 select
 	pp.BusinessEntityID
 	,pp.FirstName
@@ -294,5 +296,109 @@ select ssp.TerritoryID, AVG(SalesQuota) from Sales.SalesPerson as ssp group by s
 
 select ssp.TerritoryID, AVG(Bonus) from Sales.SalesPerson as ssp group by ssp.TerritoryID
 
+select 
+*
+from 
+Sales.SalesPerson as ssp
+where ssp.SalesQuota < 
+(select 
+	AVG(ssp1.SalesQuota)
+from 
+Sales.SalesPerson as ssp1)
 
+select 
+	AVG(ssp.SalesQuota)
+from 
+Sales.SalesPerson as ssp
 
+select 
+*
+from 
+Sales.SalesPerson as ssp
+
+select 
+*
+from 
+Sales.SalesPerson as ssp
+where ssp.SalesQuota < 
+(select 
+	AVG(ssp1.SalesQuota)
+from 
+Sales.SalesPerson as ssp1 where ssp1.TerritoryID = ssp.TerritoryID)
+
+select 
+COUNT(*)
+from 
+Sales.SalesOrderHeader
+
+--89/11
+
+select 
+	YEAR(ssoh.OrderDate) as "YEAR"
+	,MONTH(ssoh.OrderDate) as "MONTH"
+	,COUNT(*) as "number of orders"
+	,(select COUNT(*) from Sales.SalesOrderHeader as ssoh2 where YEAR(ssoh2.OrderDate) = (YEAR(ssoh.OrderDate) - 1) and MONTH(ssoh2.OrderDate) = MONTH(ssoh.OrderDate) ) as 'orders last year'
+from 
+Sales.SalesOrderHeader as ssoh
+group by YEAR(ssoh.OrderDate), MONTH(ssoh.OrderDate)
+order by YEAR desc, MONTH desc
+
+--92/1
+select 
+*
+from
+Production.UnitMeasure
+
+select 
+ pum.UnitMeasureCode
+from
+Production.UnitMeasure as pum
+where
+	not exists (select * from Production.Product as pp where pum.UnitMeasureCode = pp.SizeUnitMeasureCode or pum.UnitMeasureCode = pp.WeightUnitMeasureCode)
+
+select 
+	pum.UnitMeasureCode
+from
+Production.UnitMeasure as pum
+where
+	exists (select * from Production.Product as pp where pum.UnitMeasureCode = pp.SizeUnitMeasureCode or pum.UnitMeasureCode = pp.WeightUnitMeasureCode)
+
+select 
+	pp.ListPrice
+	,pp.ProductSubcategoryID
+from
+Production.Product as pp where pp.ProductSubcategoryID = 1
+
+select 
+	pp.ListPrice
+	,pp.ProductSubcategoryID
+from
+Production.Product as pp where pp.ProductSubcategoryID = 1
+order by pp.ListPrice desc
+
+select 
+*
+from
+Production.Product as pp
+where pp.ListPrice > all (select ListPrice from Production.Product as pp1 where pp1.ProductSubcategoryID = 1)
+
+select 
+*
+from
+Production.Product as pp
+where pp.ListPrice > any (select ListPrice from Production.Product as pp1 where pp1.ProductSubcategoryID = 1)
+
+--94/1
+
+SELECT 
+p.* 
+FROM Production.Product p
+WHERE
+p.Color = (SELECT Color FROM Production.Product WHERE ProductID=322)
+
+select
+*
+from
+Production.Product pp
+join Production.Product pp1 on pp.Color = pp1.Color
+where pp1.ProductID =322
